@@ -30,6 +30,7 @@ find_package(libhal-util REQUIRED CONFIG)
 add_executable(${PROJECT_NAME}
     main.cpp
     application.cpp
+    bme680.cpp
     platforms/${platform}.cpp)
 target_compile_options(${PROJECT_NAME} PRIVATE -g -Wall -Wextra)
 target_include_directories(${PROJECT_NAME} PUBLIC .)

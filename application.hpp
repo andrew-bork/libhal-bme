@@ -19,12 +19,15 @@
 #include <libhal/serial.hpp>
 #include <libhal/steady_clock.hpp>
 
+#include <libhal/i2c.hpp>
+
 struct application_framework
 {
   hal::output_pin* led;
   hal::serial* console;
   hal::steady_clock* clock;
   hal::callback<void()> reset;
+  hal::i2c* i2c;
 };
 
 // Application function must be implemented by one of the compilation units

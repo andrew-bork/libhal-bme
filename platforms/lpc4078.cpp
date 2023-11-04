@@ -20,7 +20,8 @@
 #include <libhal-lpc40/constants.hpp>
 #include <libhal-lpc40/output_pin.hpp>
 #include <libhal-lpc40/uart.hpp>
-
+#include <libhal-lpc40/i2c.hpp>
+#include <libhal-util/serial.hpp>
 #include "application.hpp"
 
 hal::status initialize_processor()
@@ -36,7 +37,7 @@ hal::result<application_framework> initialize_platform()
   using namespace hal::literals;
 
   // Set the MCU to the maximum clock speed
-  HAL_CHECK(hal::lpc40::clock::maximum(10.0_MHz));
+  HAL_CHECK(hal::lpc40::clock::maximum(12.0_MHz));
 
   auto& clock = hal::lpc40::clock::get();
   auto cpu_frequency = clock.get_frequency(hal::lpc40::peripheral::cpu);
@@ -49,12 +50,16 @@ hal::result<application_framework> initialize_platform()
                                                          .baud_rate = 115200,
                                                        })));
 
+
   static auto led = HAL_CHECK(hal::lpc40::output_pin::get(1, 10));
+  hal::print(uart0, "Initing i2c\n");
+  static auto i2c = HAL_CHECK((hal::lpc40::i2c::get(2)));
 
   return application_framework{
     .led = &led,
     .console = &uart0,
     .clock = &counter,
     .reset = []() { hal::cortex_m::reset(); },
+    .i2c = &i2c,
   };
 }
